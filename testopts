@@ -1,0 +1,117 @@
+#!/bin/bash
+
+parsOpts ()
+{
+#if [[ $(echo $1 | head -c1) != '-' ]]; then	# Arguments will be shifted as they are processed
+#	break
+#else
+
+	# Add all arguments (shell arguments + function argument) to the opts array
+	local opts=("$@")
+
+	# Set OPTSTRING (Possible options and arguments) to the last argument in opts
+	local optstring="${opts[(($#-1))]}"
+
+	# Remove the last argument in OPTS (OPTPARAM)
+	unset "opts[${#opts[@]}-1]"
+
+	# Set OPTIND to zero if it has not yet been initialized. Debug: Is OPTIND glob necessary if args are shifted on the fly
+	# if [[ -z "$OPTIND" ]]; then
+        #	OPTIND=0
+	# fi
+
+	## Parse OPTSTRING
+	# Convert comma-separation to space-separation
+	optstring="$(echo $optstring  | sed -e 's/,/ /g')"
+
+	# Send options and there argument symbols to an array
+	local stringopts=($optstring)
+	# Create an associative array where the option is the key and the number of arguments for that option is the value. '-1' represents unknown number of options
+	declare -A opt_arg
+	for i in "${stringopts[@]}"; do
+		if [[ $(echo $i | grep -o ':' | grep -c ':') -eq 2 ]]; then		# Number of args is 0 > infinity (double ':':Unknown)
+			opt_arg[$(echo $i | cut -d':' -f1)]=-1
+		elif [[ $(echo $i | grep -c ':') -eq 0 ]]; then		# Number of args is 0 (no ':')
+			opt_arg[$(echo $i | cut -d':' -f1)]=0
+		elif [[ -z $(echo $i | cut -d ':' -f2) ]]; then		# Number of args is 1 (single ':')
+			opt_arg[$(echo $i | cut -d':' -f1)]=1
+		else
+			opt_arg[$(echo $i | cut -d':' -f1)]=$(echo $i | cut -d':' -f2)	# Number of args is equal to the number following ':'
+		fi
+	done
+
+	## Parse option
+	if [[ $(echo $1 | head -c2) == '--' ]]; then	# Long option
+		OPT="$(echo $1 | cut -c 3-)"	# Remove the leading double dash and set OPT as the option name
+		# Check that OPT is a key in opt_arg
+		if echo ${!numbers[@]} | grep -qw $OPT; then
+			# Find the number of arguments that should be assosciated with this option
+			local numargs=${opt_arg[$OPT]}
+			# Ensure that numargs contains a postive or negative integer
+			if ! [[ $numargs =~ '^[+-]?[0-9]+$' ]] ; then
+				OPTARG="$OPT"
+				OPT='!'
+				echo "parsOpts: Error while parsing OPTSTRING. Undefined number of args for option: $OPTARG."
+				echo "Ensure that the OPTSTRING is properly formatted."
+			elif [[ $numargs  =~ '^[1-9]+$' ]]; then	# numargs is a positive integer. The option requires a specific number of args
+				# Add the numargs number of arguments to the OPTARG string. If two few arguments exist, return OPT as OPTARG, OPT as ':', and NUMARGS
+				for (( i=2; i<=(($numargs+1)); i++ )); do
+					if [[ $(echo $i | head -c1) != '-' ]] && [[ -n $i ]]; then
+						OPTARG+="$i "
+					else
+						OPTARG="$OPT"
+						OPT=':'
+						NUMARGS=$numargs
+						break
+					fi
+				done
+				if [[ $OPT != ':' ]]; then
+					if [[ $(echo $OPTARG | rev | head -c1) == ' ' ]]; then
+						OPTARG=$(echo $OPTARG | rev | cut -c 2- | rev)		# Remove the trailing space at the end of the OPTARG string
+					fi
+					shift $((numargs+1))	# Shift the appropriate number of arguments (arguments + option)
+				else
+					shift	# Shift the option
+					while [[ $(echo $1 | head -c1) != '-' ]] && [[ $# -ne 0 ]]; do	# Shift until an option is found or end of arguments
+						shift
+					done
+				fi
+			elif [[ $numargs -eq -1 ]]; then 	# An unknown number of arguements are attached to this option
+				shift	# Shift the option
+				while [[ $(echo $1 | head -c1) != '-' ]] && [[ $# -ne 0 ]]; do	# While the argument is not an option and not end of arguments
+					OPTARG+="$1 "	# Add the argument to the arguments string
+					shift	# Shift the argument
+				done
+				if [[ $(echo $OPTARG | rev | head -c1) == ' ' ]]; then
+					OPTARG=$(echo $OPTARG | rev | cut -c 2- | rev)          # Remove the trailing space at the end of the OPTARG string
+				fi
+			fi
+		else
+			# OPT is not an allowable option as defined by the optstring
+			OPTARG="$OPT"
+			OPT='?'
+		fi
+	elif [[ $(echo $1 | head -c1) == '-' ]] && [[ $(echo $1 | wc -c) -gt 2 ]]; then		# Stringed short option
+		
+#fi
+
+
+
+
+
+
+
+## Test output
+
+echo "${stringopts[@]}"
+echo "${opts[@]}"
+echo "${!opt_arg[@]}"
+echo "${opt_arg[@]}"
+}
+
+
+#while [[ $# -gt 0 ]]; do
+	parsOpts "$@" "e:,f::,g:4,h"
+	#case $OPT in
+#done
+exit
