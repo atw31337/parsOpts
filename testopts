@@ -107,7 +107,7 @@ else
 		# If all of the options in the stringed short option have been processed, shift the number
 		# of arguments of the option with the highest argument count
 		if [[ -z $____Stringed_Short_Option ]]; then
-			OPTIND=(($OPTIND+$(($____Stringed_Short_Option_Highest_Arg_Count+1)))) # shift arguments + option
+			OPTIND=$(($OPTIND+$____Stringed_Short_Option_Highest_Arg_Count+1)) # shift arguments + option
 		fi
 	elif [[ $(eval echo '$'$OPTIND | head -c2) == '--' ]]; then	# Long option
 		OPT="$(eval echo '$'$OPTIND | cut -c 3-)"	# Remove the leading double dash and set OPT as the option name
