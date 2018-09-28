@@ -1,3 +1,7 @@
+# Title: parsOpts
+# Description: parsOpts is a bash function that can be used to parse the positional parameters of a shell script into options and their corresponding arguments
+# Version: 1.00
+# Author: Andrew T. Withers
 
 # Set OPTIND global variable to zero
 OPTIND=0
