@@ -24,10 +24,10 @@ unset "args[${#args[@]}-1]"
 # Convert comma-separation to space-separation
 optstring="$(echo $optstring  | sed -e 's/,/ /g')"
 # Send options and there argument symbols to an array
-local stringopts=($optstring)
+local optstringarr=($optstring)
 # Create an associative array where the option is the key and the number of arguments for that option is the value. '-1' represents unknown number of options
 declare -A opt_args
-for i in "${stringopts[@]}"; do
+for i in "${optstringarr[@]}"; do
 	if [[ $(printf "%s" "$i" | grep -o ':' | grep -c ':') -eq 2 ]]; then		# Number of args is 0 > infinity (double ':' = Unknown)
 		opt_args[$(printf "%s" "$i" | cut -d':' -f1)]=-1
 	elif [[ $(printf "%s" "$i" | grep -c ':') -eq 0 ]]; then		# Number of args is 0 (no ':')
