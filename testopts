@@ -39,7 +39,7 @@ while [[ $OPTIND -lt $# ]]; do
 	:)
 		printf "Invalid number of arguements for option -%s. -%s requires %s arguments\n" "$OPTARG" "$OPTARG" "$NUMARGS"
 		;;
-	\?)
+	?)
 		printf "Invalid option: %s.\n" "$OPTARG"
 		;;
 	esac
