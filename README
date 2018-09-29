@@ -4,7 +4,7 @@ Author: Andrew T. Withers (atw31337@gmail.com)
 
 # Basic usage: 
 
-`source /path/to/file/parsOpts.sh 
+source /path/to/file/parsOpts.sh 
 
 while [[ $OPTIND -lt $# ]]; do
 	parsOpts "$@" "a:,b,c::,d:3,help,e:0,f:1,g"
@@ -44,7 +44,7 @@ while [[ $OPTIND -lt $# ]]; do
 		;;
 	esac 
 done 
-shift "$OPTIND"`
+shift "$OPTIND"
 
 	parsOpts is a bash function. The code can either be copied directly into the head of the script or it can be saved as a 
 separate file and linked to the script using the source command. 
