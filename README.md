@@ -73,12 +73,12 @@ if non-option arguments are required, an option with an unknown number of argume
 argument(s) will be associated with this option. (Ex: -a This is an example non-option). The non-option argument was not intended to be 
 associated with -a; however, because -a was defined in the optstring as "a::" parsOpts cannot distinguish this. It is recommended to use a 
 defined number of arguments if at all possible. 
-	parsOpts will continue to parse options and their arguments until a non-option argument, 
-as defined by optstring, is found. The global variable OPTIND tracks which parameter is to be parsed next. OPTIND starts at 0; therefore, 
-the parameter at $1 is at OPTIND 0. If the first option has 3 arguments, OPTIND will be 4 after the first iteration. The option itself is 
-at index 0 in addition to 3 args. OPTIND 4, $5, is the next parameter to be processed. If that parameter begins with '-' or '--' it is 
-then parsed as an option. Otherwise, parsOpts will not continue. shift "$OPTIND" can be used after the while loop in order to shift the 
-positional parameters to the first non-option argument. In the previous example, this would shift $5 to $1. 
+	parsOpts will continue to parse options and their arguments until a non-option argument, as defined by optstring, is found. The 
+global variable OPTIND tracks which parameter is to be parsed next. OPTIND starts at 0; therefore, the parameter at $1 is at OPTIND 0. 
+If the first option has 3 arguments, OPTIND will be 4 after the first iteration. The option itself is at index 0 in addition to 3 args. 
+OPTIND 4, $5, is the next parameter to be processed. If that parameter begins with '-' or '--' it is then parsed as an option. Otherwise, 
+parsOpts will not continue. shift "$OPTIND" can be used after the while loop in order to shift the positional parameters to the first non-option 
+argument. In the previous example, this would shift $5 to $1. 
 
 # Stringed short option arguments 
 
