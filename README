@@ -50,7 +50,7 @@ shift "$OPTIND"
 	parsOpts is a bash function. The code can either be copied directly into the head of the script or it can be saved as a 
 separate file and linked to the script using the source command. 
 
-	parsOpts requires two parameters when it is called. The first "$@" is a reserved variable, created by the shell, that
+	parsOpts requires two parameters when it is called. The first "$@", is a reserved variable, created by the shell, that
 contains all of the positional parameters that are passed to the script. The second is the optstring. The optstring tells 
 parsOpts which options are possible and the number of arguments that each one requires. parsOpts can parse three different 
 types of options: Short options, long options, and stringed short options. Short options are a single option denoted by the 
