@@ -87,21 +87,21 @@ order to shift the positional parameters to the first non-option argument. In th
 	Each of the options in a stringed short option are processed individually; therefore, they share the same set of 
 arguments; the parameters that follow the stringed option. Each of the options in the string can require a different number of 
 arguments. Each of them will associate with the first n number of parameters. A global variable, 
-____Stringed_Short_Option_Highest_Arg_Count is used to track which of the options in the string required the high number of 
-arguments. parsOpts then increments OPTIND this many parameters once all of the options in the string have been processed. 
+____Stringed_Short_Option_Highest_Arg_Count is used to track which of the options in the string required the highest number of 
+arguments. parsOpts then increments OPTIND this many parameters after all of the options in the string have been processed. 
 
 # Global variables 
 
 OPTIND - Maintains the index number of the next parameter to be processed. 
 OPT - The option name. If not enough arguments were present for an option, OPT becomes ':'. If the option is not defined in 
-	the optstring OPT becomes '?' 
-OPTARG - The argument or arguments for the OPT in a space separated string. If not enough arguents were present for an option 
+	the optstring, OPT becomes '?'. 
+OPTARG - The argument(s) for the OPT in a space separated string. If not enough arguents were present for an option 
 	or the option was not defined in optstring, OPTARG gets the option name. 
 NUMARGS - Contains the number of expected arguments for OPT in the instance that not enough arguments were present. 
-____Stringed_Short_Option - a global variable that maintains the options listed in a stringed short option from one iteration 
+____Stringed_Short_Option - a global variable that maintains the options, listed in a stringed short option, from one iteration 
 	to the next. 
 ____Stringed_Short_Option_Highest_Arg_Count - a global variable that keeps track of the highest number of arguments required 
-	for options in a stringed short option.
+	for options in a stringed short option. 
   
 * The stringed short option global variables are simply used to track certain data between iterations. They are not intended 
 	to be used by the script itself and any manipulation of these variables may have unexpected consequences.
