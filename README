@@ -1,5 +1,6 @@
 parsOpts.sh 
-Description: parsOpts is bash shell function that can be used by bash scripts to parse positional parameters into options and corresponding arguments 
+Description: parsOpts is bash shell function that can be used by bash scripts to parse positional parameters into options 
+and corresponding arguments 
 Author: Andrew T. Withers (atw31337@gmail.com) 
 
 # Basic usage: 
