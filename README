@@ -49,58 +49,60 @@ shift "$OPTIND"
 	parsOpts is a bash function. The code can either be copied directly into the head of the script or it can be saved as a 
 separate file and linked to the script using the source command. 
 
-	parsOpts requires two parameters when it is called. The first "$@" is a reserved variable, created by the shell, that contains 
-all of the positional parameters that are passed to the script. The second is the optstring. The optstring tells parsOpts which 
-options are possible and the number of arguments that each one requires. parsOpts can parse three different types of options: Short 
-options, long options, and stringed short options. Short options are a single option denoted by the prefix '-' and a letter (ex: -a). 
-Stringed short options are several short options strung together into a single parameter (ex: -abcd). This example shows four short 
-options being passed together and is equivalent to -a -b -c -d. Long options are entire words and are denoted by the prefix '--' (ex: --help). 
-Each of these types of options may also have a single argument, no arguments, a specific number of arguments, or an unknown number of arguments. 
-This is determined by the optstring. 
+	parsOpts requires two parameters when it is called. The first "$@" is a reserved variable, created by the shell, that
+contains all of the positional parameters that are passed to the script. The second is the optstring. The optstring tells 
+parsOpts which options are possible and the number of arguments that each one requires. parsOpts can parse three different 
+types of options: Short options, long options, and stringed short options. Short options are a single option denoted by the 
+prefix '-' and a letter (ex: -a). Stringed short options are several short options strung together into a single parameter 
+(ex: -abcd). This example shows four short options being passed together and is equivalent to -a -b -c -d. Long options are 
+entire words and are denoted by the prefix '--' (ex: --help). Each of these types of options may also have a single argument, 
+no arguments, a specific number of arguments, or an unknown number of arguments. This is determined by the optstring. 
 
 # Optstring format 
 
 Example: 
 "a,b:,c::,d:0,e:1,f:3,help,long:,option::,count:2" 
 
-	All options in the optstring are comma-separated and the entire string is enclosed in double quotes. The number of arguments required 
-by each option is determined by what follows the option. An option with no colon is interpreted as having no arguments. A single colon ':' is 
-interpreted as an option requiring one argument. A double colon "::" represents an unknown number of arguments. An option followed by a colon 
-and a number ':2' denotes a specific number of arguments. The example demonstrates that no arguments and one argument can also be defined 
-using the latter formatting scheme ("d:0,e:1"). When an option is defined as having an unknown number of options, parsOpts will 
-continue to associate arguments with that option until either another option is found or all the parameters have been parsed; therefore, 
-if non-option arguments are required, an option with an unknown number of arguments cannot be the last option passed. Otherwise, the non-option 
-argument(s) will be associated with this option. (Ex: -a This is an example non-option). The non-option argument was not intended to be 
-associated with -a; however, because -a was defined in the optstring as "a::" parsOpts cannot distinguish this. It is recommended to use a 
+	All options in the optstring are comma-separated and the entire string is enclosed in double quotes. The number of 
+arguments required by each option is determined by what follows the option. An option with no colon is interpreted as having 
+no arguments. A single colon ':' is interpreted as an option requiring one argument. A double colon "::" represents an unknown 
+number of arguments. An option followed by a colon and a number ':2' denotes a specific number of arguments. The example 
+demonstrates that no arguments and one argument can also be defined using the latter formatting scheme ("d:0,e:1"). When an 
+option is defined as having an unknown number of options, parsOpts will continue to associate arguments with that option until 
+either another option is found or all the parameters have been parsed; therefore, if non-option arguments are required, an 
+option with an unknown number of arguments cannot be the last option passed. Otherwise, the non-option argument(s) will be 
+associated with this option. (Ex: -a This is an example non-option). The non-option argument was not intended to be associated 
+with -a; however, because -a was defined in the optstring as "a::" parsOpts cannot distinguish this. It is recommended to use a 
 defined number of arguments if at all possible. 
-	parsOpts will continue to parse options and their arguments until a non-option argument, as defined by optstring, is found. The 
-global variable OPTIND tracks which parameter is to be parsed next. OPTIND starts at 0; therefore, the parameter at $1 is at OPTIND 0. 
-If the first option has 3 arguments, OPTIND will be 4 after the first iteration. The option itself is at index 0 in addition to 3 args. 
-OPTIND 4, $5, is the next parameter to be processed. If that parameter begins with '-' or '--' it is then parsed as an option. Otherwise, 
-parsOpts will not continue. shift "$OPTIND" can be used after the while loop in order to shift the positional parameters to the first non-option 
-argument. In the previous example, this would shift $5 to $1. 
+	parsOpts will continue to parse options and their arguments until a non-option argument, as defined by optstring, is 
+found. The global variable OPTIND tracks which parameter is to be parsed next. OPTIND starts at 0; therefore, the parameter 
+at $1 is at OPTIND 0. If the first option has 3 arguments, OPTIND will be 4 after the first iteration. The option itself is at 
+index 0 in addition to 3 args. OPTIND 4, $5, is the next parameter to be processed. If that parameter begins with '-' or '--' 
+it is then parsed as an option. Otherwise, parsOpts will not continue. shift "$OPTIND" can be used after the while loop in 
+order to shift the positional parameters to the first non-option argument. In the previous example, this would shift $5 to $1. 
 
 # Stringed short option arguments 
 
-	Each of the options in a stringed short option are processed individually; therefore, they share the same set of arguments; the parameters 
-that follow the stringed option. Each of the options in the string can require a different number of arguments. Each of them will associate 
-with the first n number of parameters. A global variable, ____Stringed_Short_Option_Highest_Arg_Count is used to track which of the options 
-in the string required the high number of arguments. parsOpts then increments OPTIND this many parameters once all of the options in the 
-string have been processed. 
+	Each of the options in a stringed short option are processed individually; therefore, they share the same set of 
+arguments; the parameters that follow the stringed option. Each of the options in the string can require a different number of 
+arguments. Each of them will associate with the first n number of parameters. A global variable, 
+____Stringed_Short_Option_Highest_Arg_Count is used to track which of the options in the string required the high number of 
+arguments. parsOpts then increments OPTIND this many parameters once all of the options in the string have been processed. 
 
 # Global variables 
 
 OPTIND - Maintains the index number of the next parameter to be processed. 
-OPT - The option name. If not enough arguments were present for an option, OPT becomes ':'. If the option is not defined in the 
-	optstring OPT becomes '?' 
-OPTARG - The argument or arguments for the OPT in a space separated string. If not enough arguents were present for an option or 
-	the option was not defined in optstring, OPTARG gets the option name. 
+OPT - The option name. If not enough arguments were present for an option, OPT becomes ':'. If the option is not defined in 
+	the optstring OPT becomes '?' 
+OPTARG - The argument or arguments for the OPT in a space separated string. If not enough arguents were present for an option 
+	or the option was not defined in optstring, OPTARG gets the option name. 
 NUMARGS - Contains the number of expected arguments for OPT in the instance that not enough arguments were present. 
-____Stringed_Short_Option - a global variable that maintains the options listed in a stringed short option from iteration to the next. 
-____Stringed_Short_Option_Highest_Arg_Count - a global variable that keeps track of the highest number of arguments required for options in 
-	a stringed short option.
+____Stringed_Short_Option - a global variable that maintains the options listed in a stringed short option from one iteration 
+	to the next. 
+____Stringed_Short_Option_Highest_Arg_Count - a global variable that keeps track of the highest number of arguments required 
+	for options in a stringed short option.
   
-* The stringed short option global variables are simply used to track certain data between iterations. They are not intended to be used by 
-the script itself and any manipulation of these variables may have unexpected consequences.
+* The stringed short option global variables are simply used to track certain data between iterations. They are not intended 
+	to be used by the script itself and any manipulation of these variables may have unexpected consequences.
 
 Feel free to contact me, at the email address above, if you have any questions or feedback, or if you encounter any issues.    
