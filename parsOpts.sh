@@ -16,17 +16,17 @@ unset OPTARG
 
 # Add all arguments (shell arguments + function argument) to the $args array
 local args=("$@")
-# Set OPTSTRING (Possible options and arguments) to the last argument in $args
+# Set OPTSTRING (Possible options and arguments) to the last element in $args
 local optstring="${args[(($#-1))]}"
-# Remove the last argument in args (optstring)
+# Remove the last element in args (optstring)
 unset "args[${#args[@]}-1]"
 
 ## Parse OPTSTRING
 # Convert comma-separation to space-separation
 optstring="$(echo $optstring  | sed -e 's/,/ /g')"
-# Send options and there argument symbols to an array
+# Send options and their argument declarations to an array
 local optstringarr=($optstring)
-# Create an associative array where the option is the key and the number of arguments for that option is the value. '-1' represents unknown number of options
+# Create an associative array in which the option is the key and the number of arguments for that option is the value. '-1' represents unknown number of options
 declare -A opt_args
 for i in "${optstringarr[@]}"; do
 	if [[ $(printf "%s" "$i" | grep -o ':' | grep -c ':') -eq 2 ]]; then		# Number of args is 0 > infinity (double ':' = Unknown)
