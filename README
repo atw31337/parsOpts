@@ -39,7 +39,7 @@ while [[ $OPTIND -lt $# ]]; do
 		echo "Invalid number of arguments for option $OPTARG. $OPTARG requires $NUMARGS argument(s)."
 		exit1
 		;;
-	?)
+	\?)
 		echo "Invalid option: $OPTARG"
 		exit 1
 		;;
