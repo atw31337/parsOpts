@@ -46,7 +46,7 @@ for i in "${optstringarr[@]}"; do
 	fi
 done
 
-# Validate the integrity of the optstring. Ensure that each key has a positive or negative integer value
+# Validate the integrity of the optstring. Ensure that each key has an integer value
 for i in "${!opt_args[@]}"; do
 	if ! [[ ${opt_args["$i"]} =~ ^[+-]?[0-9]+$ ]] || [[ ${opt_args["$i"]} -lt -1 ]]; then
 		OPTARG="$i"
@@ -71,7 +71,7 @@ else
 			# Find the number of arguments that should be assosciated with this option
 			local numargs="${opt_args[$OPT]}"
 			if [[ $numargs  =~ ^[1-9]+$ ]]; then  # numargs is a positive integer. The option requires a specific number of args
-				# Add the numargs number of arguments to the OPTARG string. If to few arguments exist, return OPT as OPTARG, OPT as ':', and NUMARGS
+				# Add the numargs number of arguments to the OPTARG string. If too few arguments exist, return OPT as OPTARG, OPT as ':', and NUMARGS
 				local arg_count=0
 				for (( i=$((OPTIND+1)); i<=$((OPTIND+numargs)); i++ )); do
 					if [[ $(printf "%s" "${args["$i"]}" | head -c1) != '-' ]] && [[ -n ${args["$i"]} ]]; then
