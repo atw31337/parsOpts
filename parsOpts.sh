@@ -29,7 +29,7 @@ local optstringarr=($optstring)
 # Create an associative array in which the option is the key and the number of arguments for that option is the value. '-1' represents unknown number of options
 declare -A opt_args
 for i in "${optstringarr[@]}"; do
-	if [[ $(printf "%s" "$i" | grep -o ':' | grep -c ':') -eq 2 ]]; then		# Number of args is 0 > infinity (double ':' = Unknown)
+	if [[ $(printf "%s" "$i" | grep -o ':' | grep -c ':') -eq 2 ]]; then		# Number of args is unknown (double ':')
 		opt_args[$(printf "%s" "$i" | cut -d':' -f1)]=-1
 	elif [[ $(printf "%s" "$i" | grep -c ':') -eq 0 ]]; then		# Number of args is 0 (no ':')
 		opt_args["$i"]=0
@@ -144,13 +144,13 @@ else
 					OPTIND=$(($OPTIND+numargs+1))	# Shift the appropriate number of arguments (arguments + option)
 				else
 					((OPTIND++))	# Shift the option
-					while [[ $(printf "%s" "${args[$OPTIND]}" | head -c1) != '-' ]] &&  [[ $OPTIND -lt $# ]]; do	# Shift until an option is found or end of arguments
+					while [[ $(printf "%s" "${args[$OPTIND]}" | head -c1) != '-' ]] &&  [[ $OPTIND -lt ${#args[@]} ]]; do	# Shift until an option is found or end of arguments
 						((OPTIND++))
 					done
 				fi
 			elif [[ $numargs -eq -1 ]]; then 	# An unknown number of arguments are attached to this option
 				((OPTIND++))	# Shift the option
-				while [[ $(printf "%s" "${args[$OPTIND]}" | head -c1) != '-' ]] && [[ $OPTIND -lt $# ]]; do	# While the argument is not an option and not end of arguments
+				while [[ $(printf "%s" "${args[$OPTIND]}" | head -c1) != '-' ]] && [[ $OPTIND -lt ${#args[@]} ]]; do	# While the argument is not an option and not end of arguments
 					OPTARG+="${args[$OPTIND]} "	# Add the argument to the arguments string
 					((OPTIND++))	# Shift the argument
 				done
@@ -232,13 +232,13 @@ else
 					OPTIND=$(($OPTIND+numargs+1))    # Shift the appropriate number of arguments (arguments + option)
 				else
 					((OPTIND++))   # Shift the option
-					while [[ $(printf "%s" "${args[$OPTIND]}" | head -c1) != '-' ]] && [[ $OPTIND -lt $# ]]; do  # Shift until an option is found or end of arguments
+					while [[ $(printf "%s" "${args[$OPTIND]}" | head -c1) != '-' ]] && [[ $OPTIND -lt ${#args[@]} ]]; do  # Shift until an option is found or end of arguments
 						((OPTIND++))
 					done
 				fi
 			elif [[ $numargs -eq -1 ]]; then	# An unknown number of arguments are attached to this option
 				((OPTIND++))   # Shift the option
-				while [[ $(printf "%s" "${args[$OPTIND]}" | head -c1) != '-' ]] && [[ $OPTIND -lt $# ]]; do  # While the argument is not an option and not end of arguments
+				while [[ $(printf "%s" "${args[$OPTIND]}" | head -c1) != '-' ]] && [[ $OPTIND -lt ${#args[@]} ]]; do  # While the argument is not an option and not end of arguments
 					OPTARG+=$(printf "%s" "${args[$OPTIND]} ")    # Add the argument to the arguments string
 					((OPTIND++))   # Shift the argument
 				done
