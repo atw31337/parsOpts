@@ -94,7 +94,7 @@ arguments. parsOpts then increments OPTIND this many parameters after all of the
 
 OPTIND - Maintains the index number of the next parameter to be processed. 
 OPT - The option name. If not enough arguments were present for an option, the value of OPT is set to ':'. If the option is not 
-defined in the optstring, the value of OPT is set to '?'. 
+	defined in the optstring, the value of OPT is set to '?'. 
 OPTARG - The argument(s) for the OPT in a space separated string. If not enough arguents were present for an option 
 	or the option was not defined in optstring, the value of OPTARG is set to the name of the option. 
 NUMARGS - Contains the number of expected arguments for OPT in the instance that not enough arguments were present. 
