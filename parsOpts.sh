@@ -6,7 +6,7 @@
 # Set OPTIND global variable to zero
 OPTIND=0
 
-parsOpts ()
+parsOpts()
 {
 
 # Unset OPT and OPTARG global variables
@@ -15,16 +15,14 @@ unset OPTARG
 
 # Add all arguments (shell arguments + function argument) to the $args array
 local args=("$@")
-# Set OPTSTRING (Possible options and arguments) to the last element in $args
+# Set optstring (Possible options and arguments) to the last element in $args
 local optstring="${args[(($#-1))]}"
 # Remove the last element in args (optstring)
 unset "args[${#args[@]}-1]"
 
-## Parse OPTSTRING
-# Convert comma-separation to space-separation
-optstring="$(echo $optstring  | sed -e 's/,/ /g')"
-# Send options and their argument declarations to an array
-local optstringarr=($optstring)
+## Parse optstring
+# Send the options and their argument declarations to an array
+local optstringarr=($(echo $optstring  | sed -e 's/,/ /g'))
 # Create an associative array in which the option is the key and the number of arguments for that option is the value. '-1' represents unknown number of options
 declare -A opt_args
 for i in "${optstringarr[@]}"; do
