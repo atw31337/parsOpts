@@ -6,7 +6,7 @@
 # Set OPTIND global variable to zero
 OPTIND=0
 
-parsOpts ()
+parsOpts()
 {
 
 # Unset OPT and OPTARG global variables
@@ -15,16 +15,14 @@ unset OPTARG
 
 # Add all arguments (shell arguments + function argument) to the $args array
 local args=("$@")
-# Set OPTSTRING (Possible options and arguments) to the last element in $args
+# Set optstring (Possible options and arguments) to the last element in $args
 local optstring="${args[(($#-1))]}"
 # Remove the last element in args (optstring)
 unset "args[${#args[@]}-1]"
 
-## Parse OPTSTRING
-# Convert comma-separation to space-separation
-optstring="$(echo $optstring  | sed -e 's/,/ /g')"
-# Send options and their argument declarations to an array
-local optstringarr=($optstring)
+## Parse optstring
+# Send the options and their argument declarations to an array
+local optstringarr=($(echo $optstring  | sed -e 's/,/ /g'))
 # Create an associative array in which the option is the key and the number of arguments for that option is the value. '-1' represents unknown number of options
 declare -A opt_args
 for i in "${optstringarr[@]}"; do
@@ -61,10 +59,10 @@ if [[ $(printf "%s" "${args[$OPTIND]}" | head -c1) != '-' ]]; then
 	break
 else
 	# Check if more stringed short options require processing
-	if [[ -n $____Stringed_Short_Option ]]; then
-		# Get the next opt and remove it from the global string
-		OPT=$(printf "%s" "$____Stringed_Short_Option" | head -c1)
-		____Stringed_Short_Option=$(printf "%s" "$____Stringed_Short_Option" | cut -c 2-)
+	if [[ -n $____Stringed_Short_Index ]] && [[ $____Stringed_Short_Index -le $(printf "%s" "${args[$OPTIND]}" | wc -c) ]]; then
+		# Get the next opt from the string and increment the stringed short option index
+		OPT=$(printf "%s" "${args[$OPTIND]}" | cut -c "$____Stringed_Short_Index")
+		((____Stringed_Short_Index+=1))
 		# Check that the OPT is a key in opt_args
 		if echo "${!opt_args[@]}" | grep -qw "$OPT"; then
 			# Find the number of arguments that should be assosciated with this option
@@ -111,7 +109,7 @@ else
 		fi
 		# If all of the options in the stringed short option have been processed, shift the number
 		# of arguments of the option with the highest argument count
-		if [[ -z $____Stringed_Short_Option ]]; then
+		if [[ $____Stringed_Short_Index -gt $(printf "%s" "${args[$OPTIND]}" | wc -c) ]]; then
 			if [[ -z $____Stringed_Short_Option_Highest_Arg_Count ]]; then
 				____Stringed_Short_Option_Highest_Arg_Count=0
 			fi
@@ -167,8 +165,8 @@ else
 		fi
 	elif [[ $(printf "%s" "${args[$OPTIND]}" | head -c1) == '-' ]] && [[ $(printf "%s" "${args[$OPTIND]}" | cut -c 3) != '' ]]; then		# Stringed short option
 		OPT=$(printf "%s" "${args[$OPTIND]}" | cut -c 2)	# The second character in the string is the first option to be processed
-		# Remove the first option from the string and add the rest to the stringed options global (____Stringed_Short_Option)
-		____Stringed_Short_Option=$(printf "%s" "${args[$OPTIND]}" | cut -c 3-)
+		# Set the stringed short option index global variable to the third character in the string (second option)
+		____Stringed_Short_Index=3
 		# Check that OPT is a key in opt_args
 		if echo "${!opt_args[@]}" | grep -qw "$OPT"; then
 			# Find the number of arguments that should be associated with this option

@@ -98,8 +98,8 @@ OPT - The option name. If not enough arguments were present for an option, the v
 OPTARG - The argument(s) for the OPT in a space separated string. If not enough arguents were present for an option 
 	or the option was not defined in optstring, the value of OPTARG is set to the name of the option. 
 NUMARGS - Contains the number of expected arguments for OPT in the instance that not enough arguments were present. 
-____Stringed_Short_Option - a global variable that stores the options, listed in a stringed short option, from one iteration 
-	to the next. 
+____Stringed_Short_Index - a global variable that stores the index number of the next option to be processed in a stringed
+	short option.
 ____Stringed_Short_Option_Highest_Arg_Count - a global variable that keeps track of the highest number of arguments required 
 	for options in a stringed short option. 
   
