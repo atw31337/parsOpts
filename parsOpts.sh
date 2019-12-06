@@ -58,7 +58,7 @@ done
 if [[ $(printf "%s" "${args[$OPTIND]}" | head -c1) != '-' ]]; then
 	break
 else
-	# Check if more stringed short options require processing
+	# Check if more stringed short options require processing. Note: ____Stringed_Short_Index accounts for the '-' prefix in the stringed option (args[$OPTIND])
 	if [[ -n $____Stringed_Short_Index ]] && [[ $____Stringed_Short_Index -le $(printf "%s" "${args[$OPTIND]}" | wc -c) ]]; then
 		# Get the next opt from the string and increment the stringed short option index
 		OPT=$(printf "%s" "${args[$OPTIND]}" | cut -c "$____Stringed_Short_Index")
